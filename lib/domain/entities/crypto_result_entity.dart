@@ -7,6 +7,8 @@ class CryptoResultEntity {
   final double sellPrice;
   final double shares;
   final double profit;
+  final DateTime dateAdded;
+  final DateTime? dateUpdated;
 
   CryptoResultEntity(
     this.id,
@@ -15,6 +17,8 @@ class CryptoResultEntity {
     this.sellPrice,
     this.shares,
     this.profit,
+    this.dateAdded,
+    this.dateUpdated,
   );
 
   CryptoResultModel toModel() => CryptoResultModel(
@@ -24,5 +28,7 @@ class CryptoResultEntity {
         sellPrice,
         shares,
         profit,
+        dateAdded,
+        dateUpdated,
       );
 }

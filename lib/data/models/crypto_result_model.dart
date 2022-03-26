@@ -9,6 +9,8 @@ class CryptoResultModel {
   final double sellPrice;
   final double shares;
   final double profit;
+  final DateTime dateAdded;
+  final DateTime? dateUpdated;
 
   CryptoResultModel(
     this.id,
@@ -17,16 +19,22 @@ class CryptoResultModel {
     this.sellPrice,
     this.shares,
     this.profit,
+    this.dateAdded,
+    this.dateUpdated,
   );
 
-  String toJson() => jsonEncode({
+  String toJson() => jsonEncode(toMap());
+
+  Map<String, dynamic> toMap() => {
         'id': id,
         'amountBought': amountBought,
         'boughtAtPrice': boughtAtPrice,
         'sellPrice': sellPrice,
         'shares': shares,
         'profit': profit,
-      });
+        'dateAdded': dateAdded.toIso8601String(),
+        'dateUpdated': dateUpdated?.toIso8601String(),
+      };
 
   CryptoResultModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -34,7 +42,9 @@ class CryptoResultModel {
         boughtAtPrice = json['boughtAtPrice'],
         sellPrice = json['sellPrice'],
         shares = json['shares'],
-        profit = json['profit'];
+        profit = json['profit'],
+        dateAdded = DateTime.parse(json['dateAdded']),
+        dateUpdated = DateTime.parse(json['dateUpdated']);
 
   CryptoResultModel.fromEntity(CryptoResultEntity entity)
       : id = entity.id,
@@ -42,7 +52,9 @@ class CryptoResultModel {
         boughtAtPrice = entity.boughtAtPrice,
         sellPrice = entity.sellPrice,
         shares = entity.shares,
-        profit = entity.profit;
+        profit = entity.profit,
+        dateAdded = entity.dateAdded,
+        dateUpdated = entity.dateUpdated;
 
   CryptoResultEntity toEntity() => CryptoResultEntity(
         id,
@@ -51,5 +63,7 @@ class CryptoResultModel {
         sellPrice,
         shares,
         profit,
+        dateAdded,
+        dateUpdated,
       );
 }

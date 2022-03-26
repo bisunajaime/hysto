@@ -7,6 +7,7 @@ import 'package:crypto_profit_calculator/domain/entities/crypto_result_entity.da
 abstract class ICryptoResultRepository {
   Future<Map<String, CryptoResultEntity>> retrieveHistory();
   Future<bool> saveRecord(CryptoResultEntity entity);
+  Future<bool> saveRecords(Map<String, CryptoResultEntity> entities);
   Future<bool> removeRecord(CryptoResultEntity entity);
   String get fileName;
 }
@@ -47,6 +48,16 @@ class CryptoResultRepository implements ICryptoResultRepository {
 
   @override
   String get fileName => 'crypto_records.json';
+
+  @override
+  Future<bool> saveRecords(Map<String, CryptoResultEntity> entities) async {
+    final raw = <String, dynamic>{};
+    entities.forEach((key, value) {
+      raw[key] = value.toModel().toMap();
+    });
+    final didSave = await dataSource.save(jsonEncode(raw));
+    return didSave;
+  }
 }
 
 // const dataFormat = {
