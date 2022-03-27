@@ -1,5 +1,3 @@
-import 'package:crypto_profit_calculator/data/models/crypto_result_model.dart';
-import 'package:crypto_profit_calculator/data/repository/datasource_repository.dart';
 import 'package:crypto_profit_calculator/domain/entities/crypto_result_entity.dart';
 import 'package:crypto_profit_calculator/domain/repositories/crypto_result_repository.dart';
 

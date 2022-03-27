@@ -36,7 +36,8 @@ class InputField extends StatelessWidget {
           )),
       style: TextStyle(
         fontSize: 14,
-        color: kTextFieldHintColor,
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
       ),
     );
   }

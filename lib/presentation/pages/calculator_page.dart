@@ -1,3 +1,7 @@
+import 'package:crypto_profit_calculator/presentation/bloc/crypto_calculator_cubit.dart';
+import 'package:crypto_profit_calculator/presentation/bloc/crypto_cubit.dart';
+import 'package:crypto_profit_calculator/presentation/bloc/crypto_result_cubit.dart';
+import 'package:crypto_profit_calculator/presentation/theme/spacing.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/calculate_button_group.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/cpc_text.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/crypto_result_widget.dart';
@@ -5,6 +9,7 @@ import 'package:crypto_profit_calculator/presentation/widgets/history_widget.dar
 import 'package:crypto_profit_calculator/presentation/widgets/input_field.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/share_count_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalculatorPage extends StatefulWidget {
   const CalculatorPage({Key? key}) : super(key: key);
@@ -14,11 +19,63 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
-  TextEditingController priceController = TextEditingController();
+  late CryptoCubit cryptoCubit;
+  late CryptoCalculatorCubit cryptoCalculatorCubit;
 
-  SizedBox get textFieldSpacing => SizedBox(height: 12);
-  SizedBox get textFieldOuterSpacing => SizedBox(height: 23);
-  SizedBox get resultComputationSpacing => SizedBox(height: 30);
+  @override
+  void initState() {
+    super.initState();
+    cryptoCubit = context.read<CryptoCubit>();
+    cryptoCalculatorCubit = context.read<CryptoCalculatorCubit>();
+
+    cryptoCubit.amountBoughtController.addListener(amountBoughtListener);
+    cryptoCubit.boughtAtPriceController.addListener(boughtAtPriceListener);
+    cryptoCubit.sellPriceController.addListener(sellPriceListener);
+  }
+
+  void amountBoughtListener() {
+    if (cryptoCubit.amountBoughtController.text.isEmpty) {
+      cryptoCubit.updateEntity(
+        cryptoCubit.state.copyWith(amountBought: null),
+      );
+      return;
+    }
+    final value = double.parse(cryptoCubit.amountBoughtController.text);
+    cryptoCubit.updateEntity(
+      cryptoCubit.state.copyWith(amountBought: value),
+    );
+  }
+
+  void boughtAtPriceListener() {
+    if (cryptoCubit.boughtAtPriceController.text.isEmpty) {
+      cryptoCubit.updateEntity(
+        cryptoCubit.state.copyWith(boughtAtPrice: null),
+      );
+      return;
+    }
+    final value = double.parse(cryptoCubit.boughtAtPriceController.text);
+    cryptoCubit.updateEntity(
+      cryptoCubit.state.copyWith(boughtAtPrice: value),
+    );
+  }
+
+  void sellPriceListener() {
+    if (cryptoCubit.sellPriceController.text.isEmpty) {
+      cryptoCubit.updateEntity(
+        cryptoCubit.state.copyWith(sellPrice: null),
+      );
+      return;
+    }
+    final value = double.parse(cryptoCubit.sellPriceController.text);
+    cryptoCubit.updateEntity(
+      cryptoCubit.state.copyWith(sellPrice: value),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,30 +119,28 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   ),
                 ],
               ),
-              textFieldOuterSpacing,
+              Spacing.textFieldOuterSpacing,
               InputField(
                 label: 'How much bought (Price in USD)',
-                textController: priceController,
+                textController: cryptoCubit.amountBoughtController,
               ),
-              textFieldSpacing,
+              Spacing.textFieldSpacing,
               InputField(
                 label: 'Price of crypto when bought',
-                textController: priceController,
+                textController: cryptoCubit.boughtAtPriceController,
               ),
-              textFieldOuterSpacing,
+              Spacing.textFieldOuterSpacing,
               ShareCountWidget(),
-              textFieldOuterSpacing,
+              Spacing.textFieldOuterSpacing,
               InputField(
                 label: 'Sell price',
-                textController: priceController,
+                textController: cryptoCubit.sellPriceController,
               ),
-              resultComputationSpacing,
-              CryptoResultWidget(100.00),
-              resultComputationSpacing,
+              CryptoResultWidget(),
               CalculateButtonGroup(),
-              textFieldOuterSpacing,
+              Spacing.textFieldOuterSpacing,
               HistoryWidget(),
-              resultComputationSpacing,
+              Spacing.resultComputationSpacing,
             ],
           ),
         ),

@@ -32,8 +32,8 @@ class CryptoResultModel {
         'sellPrice': sellPrice,
         'shares': shares,
         'profit': profit,
-        'dateAdded': dateAdded.toIso8601String(),
-        'dateUpdated': dateUpdated?.toIso8601String(),
+        'dateAdded': dateAdded.millisecondsSinceEpoch,
+        'dateUpdated': dateUpdated?.millisecondsSinceEpoch,
       };
 
   CryptoResultModel.fromJson(Map<String, dynamic> json)
@@ -43,27 +43,50 @@ class CryptoResultModel {
         sellPrice = json['sellPrice'],
         shares = json['shares'],
         profit = json['profit'],
-        dateAdded = DateTime.parse(json['dateAdded']),
-        dateUpdated = DateTime.parse(json['dateUpdated']);
+        dateAdded = DateTime.fromMillisecondsSinceEpoch(json['dateAdded']),
+        dateUpdated = DateTime.fromMillisecondsSinceEpoch(json['dateUpdated']);
 
   CryptoResultModel.fromEntity(CryptoResultEntity entity)
-      : id = entity.id,
-        amountBought = entity.amountBought,
-        boughtAtPrice = entity.boughtAtPrice,
-        sellPrice = entity.sellPrice,
-        shares = entity.shares,
-        profit = entity.profit,
-        dateAdded = entity.dateAdded,
+      : id = entity.id!,
+        amountBought = entity.amountBought!,
+        boughtAtPrice = entity.boughtAtPrice!,
+        sellPrice = entity.sellPrice!,
+        shares = entity.shares!,
+        profit = entity.profit!,
+        dateAdded = entity.dateAdded!,
         dateUpdated = entity.dateUpdated;
 
-  CryptoResultEntity toEntity() => CryptoResultEntity(
-        id,
-        amountBought,
-        boughtAtPrice,
-        sellPrice,
-        shares,
-        profit,
-        dateAdded,
-        dateUpdated,
-      );
+  CryptoResultEntity toEntity() {
+    return CryptoResultEntity()
+      ..id = id
+      ..amountBought = amountBought
+      ..boughtAtPrice = boughtAtPrice
+      ..sellPrice = sellPrice
+      ..shares = shares
+      ..profit = profit
+      ..dateAdded = dateAdded
+      ..dateUpdated = dateUpdated;
+  }
+
+  CryptoResultModel copyWith({
+    String? id,
+    double? amountBought,
+    double? boughtAtPrice,
+    double? sellPrice,
+    double? shares,
+    double? profit,
+    DateTime? dateAdded,
+    DateTime? dateUpdated,
+  }) {
+    return CryptoResultModel(
+      id ?? this.id,
+      amountBought ?? this.amountBought,
+      boughtAtPrice ?? this.boughtAtPrice,
+      sellPrice ?? this.sellPrice,
+      shares ?? this.shares,
+      profit ?? this.profit,
+      dateAdded ?? this.dateAdded,
+      dateUpdated ?? this.dateUpdated,
+    );
+  }
 }

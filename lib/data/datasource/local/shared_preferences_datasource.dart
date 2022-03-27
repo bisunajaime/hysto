@@ -18,7 +18,7 @@ class SharedPreferencesDataSource implements ISharedPreferenceDataSource {
   }
 
   @override
-  Future<bool> save(String jDoc) {
+  Future<bool> save(String fileName, String jDoc) {
     // TODO: implement save
     throw UnimplementedError();
   }

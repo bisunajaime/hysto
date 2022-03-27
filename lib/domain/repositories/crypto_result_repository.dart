@@ -20,31 +20,31 @@ class CryptoResultRepository implements ICryptoResultRepository {
   @override
   Future<bool> removeRecord(CryptoResultEntity entity) async {
     final records = await dataSource.retrieve(fileName);
-    if (records == null) {
-      final emptyMap = <String, dynamic>{};
-      emptyMap[entity.id] = entity.toModel().toJson();
-      final didSave = await dataSource.save(jsonEncode(emptyMap));
-      return didSave;
-    }
-    final decode = jsonDecode(records) as Map<String, dynamic>;
-    decode[entity.id] = entity.toModel().toJson();
-    return await dataSource.save(jsonEncode(decode));
+    final decode = jsonDecode(records!) as Map<String, dynamic>;
+    decode[entity.id!] = entity.toModel().toJson();
+    return await dataSource.save(fileName, jsonEncode(decode));
   }
 
   @override
   Future<Map<String, CryptoResultEntity>> retrieveHistory() async {
     final raw = await dataSource.retrieve(fileName);
+    if (raw == null) {
+      final create = await dataSource.save(fileName, '{}');
+      if (create) {
+        return {};
+      }
+    }
     final results = jsonDecode(raw!) as Map<String, dynamic>;
     final resultMap = <String, CryptoResultEntity>{};
-    results.keys.map((e) {
+    for (var e in results.keys) {
       resultMap[e] = CryptoResultModel.fromJson(results[e]).toEntity();
-    });
+    }
     return resultMap;
   }
 
   @override
   Future<bool> saveRecord(CryptoResultEntity entity) async =>
-      await dataSource.save(entity.toModel().toJson());
+      await dataSource.save(fileName, entity.toModel().toJson());
 
   @override
   String get fileName => 'crypto_records.json';
@@ -55,7 +55,7 @@ class CryptoResultRepository implements ICryptoResultRepository {
     entities.forEach((key, value) {
       raw[key] = value.toModel().toMap();
     });
-    final didSave = await dataSource.save(jsonEncode(raw));
+    final didSave = await dataSource.save(fileName, jsonEncode(raw));
     return didSave;
   }
 }

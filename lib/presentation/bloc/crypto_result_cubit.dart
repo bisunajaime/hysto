@@ -5,7 +5,7 @@ import 'package:crypto_profit_calculator/domain/usecases/save_crypro_record.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CryptoResultCubit extends Cubit<CryptoResultState> {
+class CryptoResultCubit extends Cubit<Map<String, CryptoResultEntity>> {
   final ISaveCryptoRecord saveCryptoRecordUseCase;
   final IRemoveCryptoRecord removeCryptoRecordUseCase;
   final IRetrieveHistory retrieveHistoryUseCase;
@@ -13,21 +13,33 @@ class CryptoResultCubit extends Cubit<CryptoResultState> {
     this.saveCryptoRecordUseCase,
     this.removeCryptoRecordUseCase,
     this.retrieveHistoryUseCase,
-  ) : super(CryptoResultInitial());
+  ) : super({});
 
-  final results = <String, CryptoResultEntity>{};
+  List<String> get keys => state.keys.toList();
 
   Future<void> retrieveHistory() async {
     final result = await retrieveHistoryUseCase.retrieveHistory();
-    emit(RetrievedCryptoResults(result));
+    state.clear();
+    state.addAll(result);
+    emit(state);
   }
 
   Future<void> saveEntity(CryptoResultEntity entity) async {
-    emit(CryptoResultSaved(await saveCryptoRecordUseCase.saveRecord(entity)));
+    state[entity.id!] = entity;
+    await saveCryptoRecordUseCase.saveRecord(state);
+    emit(state);
   }
 
   Future<void> removeEntity(CryptoResultEntity entity) async {
-    CryptoResultRemoved(await removeCryptoRecordUseCase.removeRecord(entity));
+    state.remove(entity);
+    await removeCryptoRecordUseCase.removeRecord(entity);
+    emit(state);
+  }
+
+  Future<void> clearResults() async {
+    state.clear();
+    emit(state);
+    // await repository.clearResults
   }
 }
 
@@ -37,6 +49,14 @@ abstract class CryptoResultState extends Equatable {
 }
 
 class CryptoResultInitial extends CryptoResultState {}
+
+class CryptoResultsLoading extends CryptoResultState {}
+
+class CryptoResultUpdated extends CryptoResultState {
+  final CryptoResultEntity entity;
+
+  CryptoResultUpdated(this.entity);
+}
 
 class CryptoResultSaved extends CryptoResultState {
   final bool didSave;
