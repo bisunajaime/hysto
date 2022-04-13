@@ -6,7 +6,6 @@ import 'package:crypto_profit_calculator/domain/repositories/crypto_result_repos
 import 'package:crypto_profit_calculator/domain/usecases/remove_crypto_record.dart';
 import 'package:crypto_profit_calculator/domain/usecases/retrieve_history.dart';
 import 'package:crypto_profit_calculator/domain/usecases/save_crypro_record.dart';
-import 'package:crypto_profit_calculator/presentation/bloc/counter_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_calculator_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_history_cubit.dart';
@@ -34,7 +33,6 @@ class AppSetup {
   late CryptoResultCubit cryptoResultCubit;
   late CryptoCalculatorCubit cryptoCalculatorCubit;
   late CryptoHistoryCubit cryptoHistoryCubit;
-  late CounterCubit counterCubit;
 
   Future<void> _setupRepositories() async {
     final fileDirectory = await getApplicationDocumentsDirectory();
@@ -48,8 +46,6 @@ class AppSetup {
       removeCryptoRecordUseCase,
       retrieveHistoryUseCase,
     );
-
-    counterCubit = CounterCubit();
 
     cryptoCalculatorCubit = CryptoCalculatorCubit();
     cryptoCubit = CryptoCubit();
@@ -92,9 +88,6 @@ class AppSetup {
               lazy: false, create: (context) => cryptoCubit),
           BlocProvider<CryptoHistoryCubit>(
               lazy: false, create: (context) => cryptoHistoryCubit),
-          BlocProvider<CounterCubit>(
-            create: (context) => counterCubit,
-          ),
         ],
       );
 }
