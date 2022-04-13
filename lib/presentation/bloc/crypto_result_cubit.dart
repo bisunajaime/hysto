@@ -1,11 +1,13 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:crypto_profit_calculator/domain/entities/crypto_result_entity.dart';
 import 'package:crypto_profit_calculator/domain/usecases/remove_crypto_record.dart';
 import 'package:crypto_profit_calculator/domain/usecases/retrieve_history.dart';
 import 'package:crypto_profit_calculator/domain/usecases/save_crypro_record.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CryptoResultCubit extends Cubit<Map<String, CryptoResultEntity>> {
+class CryptoResultCubit extends Cubit<CryptoResultState> {
   final ISaveCryptoRecord saveCryptoRecordUseCase;
   final IRemoveCryptoRecord removeCryptoRecordUseCase;
   final IRetrieveHistory retrieveHistoryUseCase;
@@ -13,32 +15,38 @@ class CryptoResultCubit extends Cubit<Map<String, CryptoResultEntity>> {
     this.saveCryptoRecordUseCase,
     this.removeCryptoRecordUseCase,
     this.retrieveHistoryUseCase,
-  ) : super({});
+  ) : super(CryptoResultInitial());
 
-  List<String> get keys => state.keys.toList();
+  final Map<String, CryptoResultEntity> history = {};
+  List<String> get keys => history.keys.toList();
 
   Future<void> retrieveHistory() async {
+    emit(CryptoResultsLoading());
     final result = await retrieveHistoryUseCase.retrieveHistory();
-    state.clear();
-    state.addAll(result);
-    emit(state);
+    history.clear();
+    history.addAll(result);
+    emit(CryptoResultUpdated(history));
   }
 
-  Future<void> saveEntity(CryptoResultEntity entity) async {
-    state[entity.id!] = entity;
-    await saveCryptoRecordUseCase.saveRecord(state);
-    emit(state);
+  Future<void> saveEntity(CryptoResultEntity entity, Function onSave) async {
+    emit(CryptoResultsLoading());
+    history[entity.id!] = entity;
+    await saveCryptoRecordUseCase.saveRecord(history);
+    await retrieveHistory();
+    onSave();
   }
 
   Future<void> removeEntity(CryptoResultEntity entity) async {
-    state.remove(entity);
+    emit(CryptoResultsLoading());
+    history.remove(entity);
     await removeCryptoRecordUseCase.removeRecord(entity);
-    emit(state);
+    emit(CryptoResultUpdated(history));
   }
 
   Future<void> clearResults() async {
-    state.clear();
-    emit(state);
+    emit(CryptoResultsLoading());
+    history.clear();
+    emit(CryptoResultUpdated(history));
     // await repository.clearResults
   }
 }
@@ -53,25 +61,7 @@ class CryptoResultInitial extends CryptoResultState {}
 class CryptoResultsLoading extends CryptoResultState {}
 
 class CryptoResultUpdated extends CryptoResultState {
-  final CryptoResultEntity entity;
-
-  CryptoResultUpdated(this.entity);
-}
-
-class CryptoResultSaved extends CryptoResultState {
-  final bool didSave;
-
-  CryptoResultSaved(this.didSave);
-}
-
-class RetrievedCryptoResults extends CryptoResultState {
   final Map<String, CryptoResultEntity> results;
 
-  RetrievedCryptoResults(this.results);
-}
-
-class CryptoResultRemoved extends CryptoResultState {
-  final bool removed;
-
-  CryptoResultRemoved(this.removed);
+  CryptoResultUpdated(this.results);
 }

@@ -1,6 +1,6 @@
+import 'package:bloc/bloc.dart';
 import 'package:crypto_profit_calculator/domain/entities/crypto_result_entity.dart';
 import 'package:crypto_profit_calculator/domain/usecases/calculate_crypto_result.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CryptoCalculatorCubit extends Cubit<double?> {
   CryptoCalculatorCubit() : super(null);

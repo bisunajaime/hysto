@@ -11,20 +11,25 @@ class HistoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CryptoResultCubit, Map<String, CryptoResultEntity>>(
+    return BlocBuilder<CryptoResultCubit, CryptoResultState>(
       builder: (context, state) {
-        if (state.isEmpty) {
-          return Container();
+        if (state is CryptoResultUpdated) {
+          return SizedBox(
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CPCText('History', size: 20, fontWeight: FontWeight.w800),
+                Expanded(
+                    child: HistoryListView(
+                  history: state.results,
+                )),
+              ],
+            ),
+          );
         }
-        return SizedBox(
-          height: 250,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CPCText('History', size: 20, fontWeight: FontWeight.w800),
-              Expanded(child: HistoryListView()),
-            ],
-          ),
+        return Center(
+          child: CircularProgressIndicator(),
         );
       },
     );
@@ -32,17 +37,17 @@ class HistoryWidget extends StatelessWidget {
 }
 
 class HistoryListView extends StatelessWidget {
-  const HistoryListView({Key? key}) : super(key: key);
+  final Map<String, CryptoResultEntity> history;
+  const HistoryListView({Key? key, required this.history}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final cryptoResultCubit = context.watch<CryptoResultCubit>();
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: cryptoResultCubit.keys.length,
+      itemCount: history.keys.length,
       itemBuilder: (context, i) {
-        final key = cryptoResultCubit.keys[i];
-        return HistoryItem(cryptoResultCubit.state[key]!);
+        final key = history.keys.toList()[i];
+        return HistoryItem(history[key]!);
       },
     );
   }
@@ -55,6 +60,8 @@ class HistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cryptoCubit = context.read<CryptoCubit>();
+    final isEditing = cryptoCubit.isEditingRecord(entity.id!);
+    final textColor = isEditing ? Colors.white : Colors.black;
     return GestureDetector(
       onTap: () {
         cryptoCubit.setEntity(entity);
@@ -63,7 +70,7 @@ class HistoryItem extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         width: 150,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isEditing ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -85,21 +92,24 @@ class HistoryItem extends StatelessWidget {
                     HistoryItemContent(
                       label: 'Bought this amount',
                       content: '\$${entity.amountBought}',
+                      color: textColor,
                     ),
                     HistoryItemContent(
                       label: 'Crypto price',
                       content: '\$${entity.boughtAtPrice}',
+                      color: textColor,
                     ),
                     HistoryItemContent(
                       label: 'Sold at',
                       content: '\$${entity.sellPrice}',
+                      color: textColor,
                     ),
                     SizedBox(height: 2),
                     CPCText(
                       'some date time',
                       fontWeight: FontWeight.normal,
                       size: 8,
-                      color: Colors.black,
+                      color: textColor,
                       maxLines: 1,
                       fontStyle: FontStyle.italic,
                     ),

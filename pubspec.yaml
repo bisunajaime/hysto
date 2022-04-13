@@ -38,6 +38,7 @@ dependencies:
   equatable: ^2.0.3
   uuid: ^3.0.6
   path_provider: ^2.0.9
+  bloc: ^8.0.3
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:crypto_profit_calculator/data/models/crypto_result_model.dart';
+import 'package:equatable/equatable.dart';
 
-class CryptoResultEntity {
+class CryptoResultEntity extends Equatable {
   String? id;
   double? amountBought;
   double? boughtAtPrice;
@@ -57,29 +58,14 @@ class CryptoResultEntity {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is CryptoResultEntity &&
-        other.id == id &&
-        other.amountBought == amountBought &&
-        other.boughtAtPrice == boughtAtPrice &&
-        other.sellPrice == sellPrice &&
-        other.shares == shares &&
-        other.profit == profit &&
-        other.dateAdded == dateAdded &&
-        other.dateUpdated == dateUpdated;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        amountBought.hashCode ^
-        boughtAtPrice.hashCode ^
-        sellPrice.hashCode ^
-        shares.hashCode ^
-        profit.hashCode ^
-        dateAdded.hashCode ^
-        dateUpdated.hashCode;
-  }
+  List<Object?> get props => [
+        id,
+        amountBought,
+        boughtAtPrice,
+        sellPrice,
+        shares,
+        profit,
+        dateAdded,
+        dateUpdated,
+      ];
 }

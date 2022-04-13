@@ -1,5 +1,6 @@
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_result_cubit.dart';
+import 'package:crypto_profit_calculator/presentation/dialogs/general_dialog.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/cpc_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,15 @@ class CalculateButtonGroup extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             onTap: () async {
-              cryptoResultCubit.saveEntity(cryptoCubit.state).then((_) {
+              if (!cryptoCubit.canSaveRecord) {
+                showDialog(
+                    context: context,
+                    builder: (context) => GeneralDialog(
+                        title: 'There was a problem',
+                        content: 'Please fill up all fields before saving.'));
+                return;
+              }
+              await cryptoResultCubit.saveEntity(cryptoCubit.state, () {
                 cryptoCubit.clear();
               });
             },
