@@ -17,6 +17,7 @@ class ShareCountWidget extends StatelessWidget {
       width: double.infinity,
       color: Colors.black,
       child: BlocBuilder<CryptoCubit, CryptoResultEntity>(
+        buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

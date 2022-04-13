@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +23,6 @@ class CryptoResultCubit extends Cubit<CryptoResultState> {
   List<String> get keys => history.keys.toList();
 
   Future<void> retrieveHistory() async {
-    emit(CryptoResultsLoading());
     final result = await retrieveHistoryUseCase.retrieveHistory();
     history.clear();
     history.addAll(result);

@@ -31,11 +31,10 @@ class CryptoCubit extends Cubit<CryptoResultEntity> {
   }
 
   void reset() {
-    state.reset();
     amountBoughtController.clear();
     boughtAtPriceController.clear();
     sellPriceController.clear();
-    emit(state);
+    emit(CryptoResultEntity.reset());
   }
 
   void setEntity(CryptoResultEntity entity) {

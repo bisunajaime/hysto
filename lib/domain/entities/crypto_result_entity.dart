@@ -49,6 +49,13 @@ class CryptoResultEntity extends Equatable {
       ..dateUpdated = dateUpdated ?? this.dateUpdated;
   }
 
+  CryptoResultEntity.reset()
+      : amountBought = null,
+        boughtAtPrice = null,
+        sellPrice = null,
+        shares = null,
+        profit = null;
+
   void reset() {
     amountBought = null;
     boughtAtPrice = null;

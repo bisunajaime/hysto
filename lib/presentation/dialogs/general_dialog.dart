@@ -30,8 +30,8 @@ class GeneralDialog extends StatelessWidget {
           },
           child: CPCText(
             'Dismiss',
-            color: Colors.redAccent,
-            fontWeight: FontWeight.w400,
+            color: Color.fromARGB(255, 255, 35, 35),
+            fontWeight: FontWeight.w600,
           ),
         )
       ],

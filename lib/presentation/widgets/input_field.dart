@@ -6,10 +6,12 @@ const kTextFieldHintColor = Color.fromARGB(255, 182, 182, 182);
 class InputField extends StatelessWidget {
   final String label;
   final TextEditingController textController;
+  final bool isLast;
   const InputField({
     Key? key,
     required this.label,
     required this.textController,
+    this.isLast = false,
   }) : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class InputField extends StatelessWidget {
         decimal: true,
         signed: false,
       ),
+      textInputAction: isLast ? TextInputAction.done : TextInputAction.next,
       decoration: InputDecoration(
           filled: true,
           fillColor: kTextFieldFillColor,

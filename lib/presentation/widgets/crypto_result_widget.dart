@@ -20,7 +20,7 @@ class CryptoResultWidget extends StatelessWidget {
       }
 
       final didProfit = state.profit != null && state.profit! > 0;
-      final resultText = didProfit ? 'Profit' : 'Loss';
+      final resultText = didProfit ? 'profit' : 'loss';
       final resultColor = didProfit ? kProfitColor : kLossColor;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,13 +31,23 @@ class CryptoResultWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: resultColor,
               borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/$resultText.png',
+                ),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  resultColor.withOpacity(.3),
+                  BlendMode.dstATop,
+                ),
+              ),
             ),
             alignment: Alignment.centerLeft,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CPCText(
-                  'Your profit (USD)',
+                  'Your $resultText (USD)',
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                   size: 16,
