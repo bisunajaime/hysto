@@ -1,5 +1,9 @@
 import 'package:crypto_profit_calculator/bloc_layer.dart';
 import 'package:crypto_profit_calculator/data/datasource/local/file_datasource.dart';
+import 'package:crypto_profit_calculator/domain/repositories/night_mode_repository.dart';
+import 'package:crypto_profit_calculator/domain/usecases/check_night_mode_on_start.dart';
+import 'package:crypto_profit_calculator/domain/usecases/toggle_night_mode.dart';
+import 'package:crypto_profit_calculator/presentation/bloc/night_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_profit_calculator/data/repository/datasource_repository.dart';
 import 'package:crypto_profit_calculator/domain/repositories/crypto_result_repository.dart';
@@ -23,11 +27,14 @@ class AppSetup {
   // repositories
   late DataSourceRepository dataSourceRepository;
   late ICryptoResultRepository cryptoResultRepository;
+  late INightModeRepository nightModeRepository;
 
   // usecases
   late ISaveCryptoRecord saveCryptoRecordUseCase;
   late IRemoveCryptoRecord removeCryptoRecordUseCase;
   late IRetrieveHistory retrieveHistoryUseCase;
+  late ICheckNightModeOnStart checkNightModeOnStart;
+  late IToggleNightMode toggleNightMode;
 
   // cubits
   late CryptoCubit cryptoCubit;
@@ -35,11 +42,13 @@ class AppSetup {
   late CryptoCalculatorCubit cryptoCalculatorCubit;
   late CryptoHistoryCubit cryptoHistoryCubit;
   late CounterCubit counterCubit;
+  late NightModeCubit nightModeCubit;
 
   Future<void> _setupRepositories() async {
     final fileDirectory = await getApplicationDocumentsDirectory();
     dataSourceRepository = FileDataSource(fileDirectory.path);
     cryptoResultRepository = CryptoResultRepository(dataSourceRepository);
+    nightModeRepository = NightModeRepository(dataSourceRepository);
   }
 
   Future<void> _setupBlocs() async {
@@ -58,12 +67,16 @@ class AppSetup {
       saveCryptoRecordUseCase,
       removeCryptoRecordUseCase,
     );
+
+    nightModeCubit = NightModeCubit(checkNightModeOnStart, toggleNightMode);
   }
 
   Future<void> _setupUseCases() async {
     saveCryptoRecordUseCase = SaveCryptoRecord(cryptoResultRepository);
     removeCryptoRecordUseCase = RemoveCryptoRecord(cryptoResultRepository);
     retrieveHistoryUseCase = RetrieveHistoryUseCase(cryptoResultRepository);
+    checkNightModeOnStart = CheckNightModeOnStart(nightModeRepository);
+    toggleNightMode = ToggleNightModeImpl(nightModeRepository);
   }
 
   void setOrientation() {
@@ -94,6 +107,9 @@ class AppSetup {
               lazy: false, create: (context) => cryptoHistoryCubit),
           BlocProvider<CounterCubit>(
             create: (context) => counterCubit,
+          ),
+          BlocProvider<NightModeCubit>(
+            create: (context) => nightModeCubit..checkNightModeStateOnStart(),
           ),
         ],
       );

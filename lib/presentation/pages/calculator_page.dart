@@ -9,7 +9,6 @@ import 'package:crypto_profit_calculator/presentation/widgets/history_widget.dar
 import 'package:crypto_profit_calculator/presentation/widgets/input_field.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/share_count_widget.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/wojak_avatar_widget.dart';
-import 'package:crypto_profit_calculator/presentation/widgets/wojak_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
