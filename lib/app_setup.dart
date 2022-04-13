@@ -11,6 +11,7 @@ import 'package:crypto_profit_calculator/presentation/bloc/crypto_calculator_cub
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_history_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_result_cubit.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -65,7 +66,15 @@ class AppSetup {
     retrieveHistoryUseCase = RetrieveHistoryUseCase(cryptoResultRepository);
   }
 
+  void setOrientation() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
+
   Future<void> setupApp() async {
+    setOrientation();
+
     await _setupRepositories();
     await _setupUseCases();
     await _setupBlocs();
