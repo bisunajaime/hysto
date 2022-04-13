@@ -1,6 +1,7 @@
 import 'package:crypto_profit_calculator/domain/entities/crypto_result_entity.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_cubit.dart';
 import 'package:crypto_profit_calculator/presentation/bloc/crypto_result_cubit.dart';
+import 'package:crypto_profit_calculator/presentation/dialogs/delete_history_item_dialog.dart';
 import 'package:crypto_profit_calculator/presentation/theme/ui_helper.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/cpc_text.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/crypto_result_widget.dart';
@@ -75,12 +76,23 @@ class HistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cryptoCubit = context.read<CryptoCubit>();
+    final cryptoResultCubit = context.read<CryptoResultCubit>();
     final isEditing = cryptoCubit.isEditingRecord(entity.id!);
     final textColor = isEditing ? Colors.white : Colors.black;
     final keyboardOpened = isKeyboardOpen(context);
     return GestureDetector(
       onTap: () {
         cryptoCubit.setEntity(entity);
+      },
+      onLongPress: () async {
+        // show dialog and confirm deletion
+        showDialog(
+          context: context,
+          builder: (context) => DeleteHistoryItemDialog(() async {
+            // delete record
+            await cryptoResultCubit.removeEntity(entity);
+          }),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(

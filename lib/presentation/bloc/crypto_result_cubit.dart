@@ -41,6 +41,7 @@ class CryptoResultCubit extends Cubit<CryptoResultState> {
     emit(CryptoResultsLoading());
     history.remove(entity);
     await removeCryptoRecordUseCase.removeRecord(entity);
+    await retrieveHistory();
     emit(CryptoResultUpdated(history));
   }
 
@@ -48,7 +49,6 @@ class CryptoResultCubit extends Cubit<CryptoResultState> {
     emit(CryptoResultsLoading());
     history.clear();
     emit(CryptoResultUpdated(history));
-    // await repository.clearResults
   }
 }
 

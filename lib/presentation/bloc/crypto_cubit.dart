@@ -34,7 +34,8 @@ class CryptoCubit extends Cubit<CryptoResultEntity> {
     amountBoughtController.clear();
     boughtAtPriceController.clear();
     sellPriceController.clear();
-    emit(CryptoResultEntity.reset());
+    final newEntity = CryptoResultEntity.reset(Uuid().v1());
+    emit(newEntity);
   }
 
   void setEntity(CryptoResultEntity entity) {
