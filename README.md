@@ -1,4 +1,4 @@
-# Crypto Profit Calculator
+# Hysto | Crypto Profit Calculator
 
 Calculate and save your profits with this app 
 
