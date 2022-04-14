@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'CryptoProfitCalculator',
+      title: 'Hysto',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'Inter',
