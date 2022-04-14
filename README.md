@@ -13,7 +13,7 @@ Calculate and save your profits with this app
 
 ## Sample Video
 <figure class="video_container">
-  <video controls="true" allowfullscreen="true" poster="./samples/sample_video.mp4">
-    <source src="./samples/sample_video.mp4" type="video/mp4">
+  <video controls="true" allowfullscreen="true" poster="https://github.com/jose-bamboo/crypto_profit_calculator_flutter/blob/main/samples/sample_video.mp4">
+    <source src="https://github.com/jose-bamboo/crypto_profit_calculator_flutter/blob/main/samples/sample_video.mp4" type="video/mp4">
   </video>
 </figure>
