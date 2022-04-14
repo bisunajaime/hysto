@@ -1,6 +1,6 @@
 # Hysto | Crypto Profit Calculator
 
-Calculate and save your profits with this app 
+Calculate and save your profits with Hysto 
 
 💎 💎 💎 DIAMOND HANDS BABY 💎 💎 💎
 
