@@ -31,6 +31,8 @@ class CryptoResultCubit extends Cubit<CryptoResultState> {
 
   Future<void> saveEntity(CryptoResultEntity entity, Function onSave) async {
     emit(CryptoResultsLoading());
+    entity.dateAdded ??= DateTime.now();
+    entity.dateUpdated = DateTime.now();
     history[entity.id!] = entity;
     await saveCryptoRecordUseCase.saveRecord(history);
     await retrieveHistory();

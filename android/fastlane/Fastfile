@@ -1,0 +1,38 @@
+default_platform(:android)
+
+platform :android do
+  app_version = '1.0.0'
+  type = 'appbundle'
+
+  lane :build_32_and_64 do
+    build_app_32bit
+    build_app_64bit
+  end
+
+  lane :build_app_64bit do
+    build_app(
+      app_version: app_version,
+      target_platform: 'android-arm64',
+      build_type: type
+    )
+  end
+
+  lane :build_app_32bit do
+    build_app(
+      app_version: app_version,
+      target_platform: 'android-arm',
+      build_type: type
+    )
+  end
+
+  lane :build_app do |options|
+    app_version = options[:app_version]
+    target_platform = options[:target_platform]
+    build_type = options[:build_type]
+
+
+    sh("flutter clean")
+    sh("flutter pub get")
+    sh("flutter build #{build_type}")
+  end
+end

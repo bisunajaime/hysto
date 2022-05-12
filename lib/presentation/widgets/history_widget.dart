@@ -7,6 +7,7 @@ import 'package:crypto_profit_calculator/presentation/widgets/cpc_text.dart';
 import 'package:crypto_profit_calculator/presentation/widgets/crypto_result_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HistoryWidget extends StatelessWidget {
   const HistoryWidget({Key? key}) : super(key: key);
@@ -140,9 +141,9 @@ class HistoryItem extends StatelessWidget {
                           ),
                           SizedBox(height: 2),
                           CPCText(
-                            'some date time',
+                            timeago.format(entity.dateAdded!),
                             fontWeight: FontWeight.normal,
-                            size: 8,
+                            size: 10,
                             color: textColor,
                             maxLines: 1,
                             fontStyle: FontStyle.italic,

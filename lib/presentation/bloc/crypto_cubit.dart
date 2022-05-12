@@ -9,11 +9,7 @@ class CryptoCubit extends Cubit<CryptoResultEntity> {
   final amountBoughtController = TextEditingController();
   final boughtAtPriceController = TextEditingController();
   final sellPriceController = TextEditingController();
-  CryptoCubit()
-      : super(CryptoResultEntity()
-          ..id = Uuid().v1()
-          ..dateAdded = DateTime.now()
-          ..dateUpdated = DateTime.now()) {
+  CryptoCubit() : super(CryptoResultEntity()..id = Uuid().v1()) {
     addListeners();
   }
 
